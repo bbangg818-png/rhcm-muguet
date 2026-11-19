@@ -35,10 +35,10 @@ jobs:
       - name: Install Rust
         run: rustup toolchain install stable --profile minimal
 
-      - name: Build muguet-server (Windows)
-        run: cargo build --release --bin muguet-server
+      - name: Build rhcm-server (Windows)
+        run: cargo build --release --manifest-path server-standalone/Cargo.toml
 
       - uses: actions/upload-artifact@v4
         with:
           name: RHCM-server-windows
-          path: target/release/muguet-server.exe
+          path: server-standalone/target/release/rhcm-server.exe
