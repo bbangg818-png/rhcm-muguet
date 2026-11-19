@@ -537,17 +537,3 @@ func localIPs() -> [String] {
     }
     return out.isEmpty ? ["?"] : out
 }
-
-@_cdecl("muguet_show_launcher")
-public func muguetShowLauncher(_ viewController: UnsafeMutableRawPointer, _ done: @convention(c) () -> Void) {
-    let parent = Unmanaged<UIViewController>.fromOpaque(viewController).takeUnretainedValue()
-    weak var sheet: UIViewController?
-    let host = UIHostingController(rootView: LauncherView(play: {
-        sheet?.dismiss(animated: true)
-        done()
-    }))
-    sheet = host
-    host.modalPresentationStyle = .fullScreen
-    host.isModalInPresentation = true
-    parent.present(host, animated: false)
-}

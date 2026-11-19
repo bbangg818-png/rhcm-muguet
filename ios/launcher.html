@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RHCM ONLINE</title>
+<style>
+  :root {
+    --bg: #03120d;
+    --bg2: #061f16;
+    --panel: #0a2b1e;
+    --panel2: #0f3d2a;
+    --accent: #22d37e;
+    --accent-dim: #127a4e;
+    --gold: #f2cc4d;
+    --text: #edfdf5;
+    --sub: #8fc7ab;
+    --danger: #f2594b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; overflow:hidden; }
+  body {
+    font-family: -apple-system, "SF Pro Text", "Segoe UI", Tahoma, sans-serif;
+    background: radial-gradient(120% 120% at 20% 0%, #0a3a26 0%, var(--bg) 55%, #020b07 100%);
+    color: var(--text);
+    display:flex;
+  }
+
+  /* ============ LEFT ============ */
+  #left {
+    flex: 1.1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding: 24px; gap: 18px; position:relative;
+  }
+  #left::after {
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background: repeating-linear-gradient(115deg, transparent 0 46px, rgba(34,211,126,.03) 46px 48px);
+  }
+  .logo-wrap { position:relative; width:170px; height:170px; }
+  .hex {
+    position:absolute; inset:0;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: linear-gradient(160deg, rgba(34,211,126,.28), rgba(18,122,78,.10));
+    border: none;
+  }
+  .hex::after {
+    content:""; position:absolute; inset:6px;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    background: var(--bg);
+  }
+  .logo-text {
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; z-index:2;
+  }
+  .logo-text b { font-size:34px; font-weight:900; letter-spacing:2px; color:var(--text); text-shadow:0 0 24px rgba(34,211,126,.5); }
+  .logo-text span { font-size:13px; font-weight:800; letter-spacing:6px; color:var(--gold); }
+  .tagline { font-size:11px; font-weight:600; letter-spacing:3px; color:var(--sub); }
+
+  #playBtn {
+    width:320px; height:66px; border:none; border-radius:16px; cursor:pointer;
+    font-size:24px; font-weight:900; letter-spacing:6px; color:#fff;
+    background: linear-gradient(90deg, var(--accent), #0f9d58);
+    box-shadow: 0 8px 32px rgba(34,211,126,.4), inset 0 1px 0 rgba(255,255,255,.25);
+    transition: transform .12s, box-shadow .12s;
+  }
+  #playBtn:active { transform: scale(.97); }
+  #playBtn:disabled { opacity:.45; box-shadow:none; }
+
+  #status { min-height:44px; display:flex; align-items:center; gap:10px; max-width:360px; }
+  .status-box {
+    display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:12px;
+    font-size:14px; background:rgba(242,89,75,.12); border:1px solid rgba(242,89,75,.4); color:var(--text);
+  }
+  .status-box.ok { background:rgba(34,211,126,.10); border-color:rgba(34,211,126,.35); }
+  .status-box.info { background:rgba(143,199,171,.08); border-color:rgba(143,199,171,.25); }
+  .spinner { width:18px;height:18px;border:2px solid var(--sub);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite; }
+  @keyframes spin { to { transform:rotate(360deg) } }
+  .foot { font-size:11px; color:var(--sub); opacity:.6; }
+
+  /* ============ RIGHT ============ */
+  #right {
+    flex:1; border-left:1px solid rgba(34,211,126,.15);
+    padding:22px 22px; overflow-y:auto;
+    background: linear-gradient(180deg, rgba(10,43,30,.55), rgba(4,18,13,.75));
+  }
+  .sec-title { display:flex; align-items:center; gap:8px; font-size:16px; font-weight:800; margin:4px 0 12px; }
+  .sec-title::before { content:"⬡"; color:var(--accent); font-size:14px; }
+  .panel {
+    background: var(--panel); border:1px solid rgba(34,211,126,.18);
+    border-radius:14px; padding:14px; margin-bottom:14px;
+  }
+  .panel h4 { font-size:12px; font-weight:700; color:var(--sub); letter-spacing:1px; margin-bottom:10px; text-transform:uppercase; }
+
+  .row { display:flex; align-items:center; justify-content:space-between; margin:10px 0; font-size:14px; }
+  .row label { color:var(--text); font-weight:600; }
+  select, input[type=text] {
+    background: var(--panel2); color:var(--text); border:1px solid rgba(34,211,126,.3);
+    border-radius:8px; padding:8px 10px; font-size:14px; outline:none;
+  }
+  select:focus, input[type=text]:focus { border-color:var(--accent); }
+  input[type=range] { width:130px; accent-color:var(--accent); }
+  .seg { display:flex; background:var(--panel2); border-radius:9px; padding:3px; border:1px solid rgba(34,211,126,.2); }
+  .seg button {
+    flex:1; border:none; background:transparent; color:var(--sub);
+    padding:7px 4px; font-size:12px; font-weight:700; border-radius:7px; cursor:pointer;
+  }
+  .seg button.on { background:var(--accent); color:#04220f; }
+  .toggle { position:relative; width:44px; height:24px; }
+  .toggle input { display:none; }
+  .toggle .tr {
+    position:absolute; inset:0; background:var(--panel2); border-radius:24px;
+    border:1px solid rgba(34,211,126,.3); transition:.2s; cursor:pointer;
+  }
+  .toggle .tr::after {
+    content:""; position:absolute; top:2px; left:2px; width:18px; height:18px;
+    border-radius:50%; background:var(--sub); transition:.2s;
+  }
+  .toggle input:checked + .tr { background:var(--accent-dim); }
+  .toggle input:checked + .tr::after { left:22px; background:var(--accent); }
+
+  /* server cards */
+  .srv {
+    display:flex; align-items:center; gap:12px; padding:12px;
+    background:var(--panel2); border:1px solid rgba(34,211,126,.2);
+    border-radius:12px; margin-bottom:8px; cursor:pointer; transition:.15s;
+  }
+  .srv.sel { border-color:var(--accent); background:rgba(34,211,126,.12); box-shadow:0 0 0 1px var(--accent) inset; }
+  .srv .ico { width:34px;height:34px;border-radius:9px; background:rgba(34,211,126,.15); display:flex;align-items:center;justify-content:center; font-size:16px; }
+  .srv .nm { font-weight:800; font-size:14px; }
+  .srv .ad { font-size:11px; color:var(--sub); font-family:ui-monospace,monospace; }
+  .srv .pl { margin-left:auto; font-size:12px; color:var(--accent); font-weight:700; }
+  .srv .chk { color:var(--accent); font-weight:900; display:none; }
+  .srv.sel .chk { display:block; }
+  .hint { font-size:11px; color:var(--sub); margin-top:6px; }
+  details { margin-top:6px; }
+  summary { font-size:13px; color:var(--sub); cursor:pointer; font-weight:600; }
+  details .panel { margin-top:10px; }
+
+  ::-webkit-scrollbar { width:6px; } ::-webkit-scrollbar-thumb { background:var(--accent-dim); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<!-- LEFT -->
+<div id="left">
+  <div class="logo-wrap">
+    <div class="hex"></div>
+    <div class="logo-text"><b>RHCM</b><span>ONLINE</span></div>
+  </div>
+  <div class="tagline">GTA V PORT — COMMUNITY EDITION</div>
+
+  <button id="playBtn" disabled>PLAY</button>
+  <div id="status"></div>
+  <div class="foot">RHCM ONLINE Community</div>
+</div>
+
+<!-- RIGHT -->
+<div id="right">
+  <div class="sec-title">การตั้งค่า</div>
+
+  <div class="panel">
+    <h4>โหมดเกม</h4>
+    <div class="seg" id="modeSeg">
+      <button data-v="1">Story</button>
+      <button data-v="2" class="on">Sandbox</button>
+    </div>
+    <div class="row"><label>ความละเอียด</label>
+      <select id="scale">
+        <option value="0.35">35% เร็วสุด</option>
+        <option value="0.5" selected>50%</option>
+        <option value="0.75">75%</option>
+        <option value="1.0">100% คมสุด</option>
+      </select>
+    </div>
+    <div class="row"><label>Texture</label>
+      <select id="textures">
+        <option value="0">Normal</option>
+        <option value="1">High</option>
+        <option value="2">Very High</option>
+      </select>
+    </div>
+    <div class="row"><label>Frame limit</label>
+      <select id="fps">
+        <option value="30">30 fps</option>
+        <option value="60" selected>60 fps</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h4>Online — ต้องเล่นผ่านเซิร์ฟเวอร์ RHCM เท่านั้น</h4>
+    <div class="row"><label>ชื่อของคุณ</label><input type="text" id="pname" placeholder="ชื่อ" style="width:170px"></div>
+    <div id="serverList"><div class="hint">กำลังโหลดเซิร์ฟเวอร์…</div></div>
+    <div class="hint">หากไม่มีเซิร์ฟเวอร์แสดง → เซิร์ฟเวอร์ปิดอยู่ ลองใหม่ภายหลัง</div>
+  </div>
+
+  <details>
+    <summary>▸ ขั้นสูง</summary>
+    <div class="panel">
+      <div class="row"><label>Look sensitivity</label><input type="range" id="sens" min="0.25" max="3" step="0.25" value="1"><span id="sensV" style="width:44px;text-align:right;font-family:monospace">1.00×</span></div>
+      <div class="row"><label>ปิดเสียง</label><label class="toggle"><input type="checkbox" id="mute"><span class="tr"></span></label></div>
+    </div>
+  </details>
+
+  <div class="panel" id="gamePanel" style="display:none">
+    <h4>Game Data</h4>
+    <div id="importBox"></div>
+  </div>
+</div>
+
+<script>
+const SERVER_LIST_URL = "https://rhcmonlinenew.wasmer.app/muguet-servers.json";
+const state = { mode:2, scale:0.5, fps:60, textures:0, touch:1.0, mute:false, servers:[], selected:null, gameReady:false, hasCode:false, zips:[] };
+
+// ---------- native bridge ----------
+function native(msg){ try{ window.webkit.messageHandlers.rhcm.postMessage(msg); }catch(e){} }
+function fmt(p){ return Math.round(p*100)+"%"; }
+
+// ---------- status ----------
+function status(html, cls){ document.getElementById('status').innerHTML = html ? `<div class="status-box ${cls||''}">${html}</div>` : ''; }
+function setBusy(b){ document.getElementById('playBtn').disabled = b || !state.gameReady || state.servers.length===0 || !state.selected; }
+
+// ---------- init from native ----------
+window.rhcmInit = function(d){
+  state.gameReady = !!d.gameReady; state.hasCode = !!d.hasCode; state.zips = d.zips||[];
+  if(d.settings){
+    const s=d.settings;
+    state.mode=s.mode??2; state.scale=s.scale??0.5; state.fps=s.fps??60;
+    state.textures=s.textures??0; state.touch=s.touch??1.0; state.mute=!!s.mute;
+    if(s.name) document.getElementById('pname').value=s.name;
+    applyUI();
+  }
+  renderImport();
+  updatePlay();
+};
+window.rhcmProgress = function(p){ status(`<div class="spinner"></div> กำลัง import game data… ${fmt(p)}`,'info'); setBusy(true); };
+window.rhcmReady = function(){ state.gameReady=true; status('พร้อมเล่น','ok'); renderImport(); updatePlay(); };
+window.rhcmError = function(m){ status('⚠ '+m); updatePlay(); };
+window.rhcmClearStatus = function(){ status(''); updatePlay(); };
+
+function updatePlay(){
+  const btn=document.getElementById('playBtn');
+  btn.disabled = !state.gameReady || state.servers.length===0 || !state.selected;
+}
+
+// ---------- server list ----------
+async function loadServers(){
+  const box=document.getElementById('serverList');
+  try{
+    const r=await fetch(SERVER_LIST_URL,{cache:'no-store'});
+    const list=await r.json();
+    state.servers=(Array.isArray(list)?list:[]).filter(s=>s&&s.address);
+    if(!state.servers.length){ box.innerHTML='<div class="hint">ไม่พบเซิร์ฟเวอร์</div>'; }
+    else{
+      box.innerHTML = state.servers.map((s,i)=>`
+        <div class="srv ${i===0?'sel':''}" data-addr="${s.address}">
+          <div class="ico">⬡</div>
+          <div><div class="nm">${s.name||'RHCM Server'}</div><div class="ad">${s.address}</div></div>
+          <div class="pl">${s.players!=null&&s.max!=null?s.players+'/'+s.max:''}</div>
+          <div class="chk">✓</div>
+        </div>`).join('');
+      // auto-select first
+      selectServer(state.servers[0].address);
+      box.querySelectorAll('.srv').forEach(el=>el.onclick=()=>selectServer(el.dataset.addr));
+    }
+  }catch(e){ box.innerHTML='<div class="hint">โหลดรายชื่อเซิร์ฟเวอร์ไม่ได้</div>'; }
+  updatePlay();
+}
+function selectServer(addr){
+  state.selected=addr;
+  document.querySelectorAll('.srv').forEach(el=>el.classList.toggle('sel',el.dataset.addr===addr));
+  updatePlay();
+}
+
+// ---------- settings UI ----------
+function applyUI(){
+  document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.v===state.mode));
+  document.getElementById('scale').value=String(state.scale);
+  document.getElementById('textures').value=String(state.textures);
+  document.getElementById('fps').value=String(state.fps);
+  document.getElementById('sens').value=state.touch;
+  document.getElementById('sensV').textContent=state.touch.toFixed(2)+'×';
+  document.getElementById('mute').checked=state.mute;
+}
+document.querySelectorAll('#modeSeg button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#modeSeg button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); state.mode=+b.dataset.v;
+});
+document.getElementById('scale').onchange=e=>state.scale=parseFloat(e.target.value);
+document.getElementById('textures').onchange=e=>state.textures=+e.target.value;
+document.getElementById('fps').onchange=e=>state.fps=+e.target.value;
+document.getElementById('sens').oninput=e=>{state.touch=parseFloat(e.target.value);document.getElementById('sensV').textContent=state.touch.toFixed(2)+'×';};
+document.getElementById('mute').onchange=e=>state.mute=e.target.checked;
+
+// ---------- import ----------
+function renderImport(){
+  const p=document.getElementById('gamePanel'), b=document.getElementById('importBox');
+  if(state.hasCode){ p.style.display='none'; return; }
+  p.style.display='block';
+  if(!state.gameReady){
+    b.innerHTML = state.zips.length
+      ? state.zips.map(z=>`<div class="srv" data-z="${z}"><div class="ico">📦</div><div><div class="nm">${z}</div><div class="ad">game data zip</div></div><div class="pl">Import</div></div>`).join('')
+      : '<div class="hint">ยังไม่มี game data — ย้ายไฟล์ .zip ไปที่ Files → On My iPhone → RHCM ONLINE</div>';
+    b.querySelectorAll('.srv').forEach(el=>el.onclick=()=>native({action:'import',file:el.dataset.z}));
+  } else {
+    b.innerHTML='<div class="hint" style="color:var(--accent)">✓ game data พร้อมแล้ว</div>';
+  }
+}
+
+// ---------- play ----------
+document.getElementById('playBtn').onclick=()=>{
+  if(!state.selected){ status('⚠ กรุณาเลือกเซิร์ฟเวอร์','info'); return; }
+  native({action:'play', settings:{
+    mode:state.mode, scale:state.scale, fps:state.fps, textures:state.textures,
+    touch:state.touch, mute:state.mute,
+    multiplayer:true, host:false, server:state.selected,
+    name:document.getElementById('pname').value||'player'
+  }});
+};
+
+loadServers();
+</script>
+</body>
+</html>

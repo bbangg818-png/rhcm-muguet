@@ -15,6 +15,7 @@ fn main() {
     println!("cargo:rustc-link-arg-bins=-Wl,-segprot,__GAME,rx,rx");
 
     println!("cargo:rerun-if-changed=ios/Launcher.swift");
+    println!("cargo:rerun-if-changed=ios/bridge.swift");
     let out = std::env::var("OUT_DIR").unwrap();
     let xcrun = |args: &[&str]| {
         let o = Command::new("xcrun").args(args).output().expect("xcrun");
@@ -25,7 +26,7 @@ fn main() {
     let status = Command::new(&swiftc)
         .args(["-parse-as-library", "-emit-library", "-static", "-O", "-module-name", "MuguetLauncher"])
         .args(["-target", "arm64-apple-ios15.0", "-sdk", &sdk])
-        .arg("ios/Launcher.swift")
+        .arg("ios/Launcher.swift").arg("ios/bridge.swift")
         .arg("-o")
         .arg(format!("{out}/libmuguetlauncher.a"))
         .status()
