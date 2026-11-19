@@ -118,7 +118,7 @@ final class Importer: ObservableObject {
 
 // MARK: - RHCM Server List
 
-struct ServerEntry: Identifiable, Decodable {
+struct ServerEntry: Identifiable, Decodable, Equatable {
     let name: String
     let address: String
     var players: Int? = nil
@@ -134,7 +134,7 @@ final class ServerList: ObservableObject {
     @Published var loaded = false
 
     func refresh() {
-        guard let url = ServerList.listURL else { return }
+        let url = ServerList.listURL
         URLSession.shared.dataTask(with: url) { data, _, _ in
             guard let data,
                   let list = try? JSONDecoder().decode([ServerEntry].self, from: data) else {
@@ -244,13 +244,13 @@ struct LauncherView: View {
                         Text("ONLINE")
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                             .foregroundStyle(RHCM.gold)
-                            .kerning(6)
+                            
                     }
                 }
                 Text("GTA V PORT — COMMUNITY EDITION")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(RHCM.sub)
-                    .kerning(2)
+                    
             }
 
             Spacer()
@@ -478,7 +478,7 @@ struct LauncherView: View {
         Button(action: start) {
             HStack(spacing: 12) {
                 Image(systemName: "play.fill")
-                Text("PLAY").font(.title2.weight(.black)).kerning(4)
+                Text("PLAY").font(.title2.weight(.black))
             }
             .foregroundStyle(.white)
             .frame(width: 300, height: 64)
