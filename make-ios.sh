@@ -18,7 +18,7 @@ done
 
 TEAM="${TEAM:-}"
 if [ "$MODE" != "--ipa" ] && [ -z "$TEAM" ]; then echo "set TEAM=<your Apple developer team id>"; exit 1; fi
-BUNDLE_ID="${BUNDLE_ID:-ch.cclerc.muguet.ios}"
+BUNDLE_ID="${BUNDLE_ID:-com.rhcm.online}"
 ENTITLEMENTS=Muguet.entitlements
 HEAP_GB=8
 if [ "${FREE:-0}" = 1 ] || [ "$MODE" = "--ipa" ]; then
