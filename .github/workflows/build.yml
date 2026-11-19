@@ -1,0 +1,44 @@
+name: Build RHCM IPA + Server
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Rust
+        run: |
+          rustup toolchain install 1.98.1 --profile minimal --target aarch64-apple-ios
+          rustup default 1.98.1
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Build IPA
+        run: |
+          chmod +x make-ios.sh
+          ./make-ios.sh --ipa
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RHCM-ONLINE-ipa
+          path: build/RHCM.ipa
+
+  server:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Build muguet-server (Windows)
+        run: cargo build --release --bin muguet-server
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: RHCM-server-windows
+          path: target/release/muguet-server.exe
